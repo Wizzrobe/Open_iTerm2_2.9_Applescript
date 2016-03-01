@@ -1,0 +1,26 @@
+on run {input, parameters}
+  tell application "Finder"
+    set dir_path to quoted form of (POSIX path of (folder of the front window as alias))
+  end tell
+  CD_to(dir_path)
+end run
+
+on CD_to(theDir)
+  tell application "iTerm2"
+    activate
+
+    try
+      set _session to current session of first window
+    on error
+      set newWindow to (create window with default profile)
+      tell newWindow
+        launch session "Default"
+        set _session to current session
+      end tell
+    end try
+
+    tell _session
+      write text "cd " & theDir & ";clear;"
+    end tell
+  end tell
+end CD_to
